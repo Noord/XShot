@@ -63,40 +63,40 @@ namespace XShot
         public void On_Mouse_Up(object sender, MouseEventArgs e)
         {
             t.StopSelecting();
-            var img = CropImage(activeImage, GetRectangle(t.selection.p1, t.selection.p2));
+            var img = CropImage(activeImage, GetRectangle(t.Selection.Start, t.Selection.End));
             img.Save(String.Format("{0}.jpg", ++imageCounter), ImageFormat.Jpeg);
             panel.Invalidate();
         }
 
         public void On_Mouse_Move(object sender, MouseEventArgs e)
         {
-            t.updateMouseMovement();
+            t.UpdateMouseMovement();
             if (t.IsMouseMoved())
                 panel.Invalidate();
         }
 
         private void On_Paint(object sender, PaintEventArgs e)
         {
-            zoom.Image = CropImage(activeImage, new Rectangle(t.active.X, t.active.Y, 30, 30));
+            zoom.Image = CropImage(activeImage, new Rectangle(t.Active.X, t.Active.Y, 30, 30));
             zoom.Location = GetZoomLoc();
-            zoom.Refresh(); // picturebox i yenilemek icin
+            zoom.Refresh();
 
             e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
             e.Graphics.SmoothingMode = SmoothingMode.HighSpeed;
             e.Graphics.PixelOffsetMode = PixelOffsetMode.HighSpeed;
             e.Graphics.CompositingQuality = CompositingQuality.HighSpeed;
 
-            e.Graphics.DrawLine(redPen, new Point(t.active.X, res.Top), new Point(t.active.X, res.Bottom));
-            e.Graphics.DrawLine(redPen, new Point(res.Left, t.active.Y), new Point(res.Right, t.active.Y));
-            e.Graphics.DrawString(t.active.X + " - " + t.active.Y, Font, new SolidBrush(Color.Orange), t.active.X + 10, t.active.Y);
+            e.Graphics.DrawLine(redPen, new Point(t.Active.X, res.Top), new Point(t.Active.X, res.Bottom));
+            e.Graphics.DrawLine(redPen, new Point(res.Left, t.Active.Y), new Point(res.Right, t.Active.Y));
+            e.Graphics.DrawString(t.Active.X + " - " + t.Active.Y, Font, new SolidBrush(Color.Orange), t.Active.X + 10, t.Active.Y);
 
-            if (t.selection.active)
-                e.Graphics.DrawRectangle(yellowPen, GetRectangle(t.selection.p1, t.active));
+            if (t.Selection.Active)
+                e.Graphics.DrawRectangle(yellowPen, GetRectangle(t.Selection.Start, t.Active));
         }
 
         private void On_Key_Down(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape) // esc ye basinca cik
+            if (e.KeyCode == Keys.Escape)
                 Application.Exit();
         }
 
@@ -105,7 +105,7 @@ namespace XShot
             return new Rectangle(Math.Min(start.X, end.X), Math.Min(start.Y, end.Y), Math.Abs(start.X - end.X), Math.Abs(start.Y - end.Y));
         }
 
-        private static Image CropImage(Image image, Rectangle r) // resmin icinden bir kisim dikdortgeni kopyala
+        private static Image CropImage(Image image, Rectangle r)
         {
             Bitmap old = new Bitmap(image);
             PixelFormat format = old.PixelFormat;
@@ -114,16 +114,16 @@ namespace XShot
 
         private Point GetZoomLoc()
         {
-            if (t.active.X <= res.Width / 2 && t.active.Y <= res.Height / 2)
-                return new Point(t.active.X + 10, t.active.Y + 10);
+            if (t.Active.X <= res.Width / 2 && t.Active.Y <= res.Height / 2)
+                return new Point(t.Active.X + 10, t.Active.Y + 10);
 
-            else if (t.active.X <= res.Width / 2 && t.active.Y > res.Height / 2)
-                return new Point(t.active.X + 10, t.active.Y - 310);
+            else if (t.Active.X <= res.Width / 2 && t.Active.Y > res.Height / 2)
+                return new Point(t.Active.X + 10, t.Active.Y - 310);
 
-            else if (t.active.X > res.Width / 2 && t.active.Y <= res.Height / 2)
-                return new Point(t.active.X - 310, t.active.Y + 10);
+            else if (t.Active.X > res.Width / 2 && t.Active.Y <= res.Height / 2)
+                return new Point(t.Active.X - 310, t.Active.Y + 10);
 
-            return new Point(t.active.X - 310, t.active.Y - 310);
+            return new Point(t.Active.X - 310, t.Active.Y - 310);
         }
     }
 }

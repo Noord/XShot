@@ -5,41 +5,41 @@ namespace XShot
 {
     public class MouseTracker
     {
-        public Point last;
-        public Point active;
+        public Point Last { get; set; }
+        public Point Active { get; set; }
 
-        public Selection selection { get; set; }
+        public Selection Selection { get; set; }
 
-        public MouseTracker() { selection = new Selection(); }
+        public MouseTracker() { Selection = new Selection(); }
 
-        public void updateMouseMovement()
+        public void UpdateMouseMovement()
         {
-            last = active;
-            active = Cursor.Position;
+            Last = Active;
+            Active = Cursor.Position;
         }
 
         public bool IsMouseMoved()
         {
-            return active != last;
+            return Active != Last;
         }
 
         public void StartSelecting()
         {
-            selection.active = true;
-            selection.p1 = Cursor.Position;
+            Selection.Active = true;
+            Selection.Start = Cursor.Position;
         }
 
         public void StopSelecting()
         {
-            selection.p2 = Cursor.Position;
-            selection.active = false;
+            Selection.End = Cursor.Position;
+            Selection.Active = false;
         }
     }
 
     public class Selection
     {
-        public bool active { get; set; }
-        public Point p1 { get; set; }
-        public Point p2 { get; set; }
+        public bool Active { get; set; }
+        public Point Start { get; set; }
+        public Point End { get; set; }
     }
 }
